@@ -1,17 +1,19 @@
-﻿using System;
+﻿using HuffmanCode.PriorityQueues.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace ConsoleApplication1
+namespace HuffmanCode.PriorityQueues
 {
-    class PriotityQueue<TPriority, TItem>
+    class PriotityQueue<TPriority, TItem> : IPriorityQueue<TPriority, TItem> where TPriority : IComparable where TItem : class
     {
-        SortedDictionary<TPriority, Queue<TItem>> subQueue;
+        private SortedDictionary<TPriority, Queue<TItem>> subQueue;
+
         public PriotityQueue()
         {
             this.subQueue = new SortedDictionary<TPriority, Queue<TItem>>();
         }
+
         public void Enqueue(TPriority priority, TItem item)
         {
             if (subQueue.ContainsKey(priority))
@@ -25,6 +27,7 @@ namespace ConsoleApplication1
                 subQueue.Add(priority, queue);
             }
         }
+
         public TItem Dequeue()
         {
             if (subQueue.Count == 0)
@@ -39,6 +42,7 @@ namespace ConsoleApplication1
                 return Dequeue();
             }
         }
+
         public int Count()
         {
             return subQueue.Sum(kvp => kvp.Value.Count);

@@ -1,32 +1,49 @@
-﻿using System.Collections.Generic;
+﻿using HuffmanCode.BinaryCoders;
+using HuffmanCode.BinaryCoders.Base;
+using HuffmanCode.PriorityQueues;
+using HuffmanCode.PriorityQueues.Base;
+using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Text;
 
-namespace ConsoleApplication1
+namespace HuffmanCode
 {
     class Encoder
     {
-        string textToEncode;
+        private string textToEncode;
+
         public Dictionary<char, Node> CharToCode { get; private set; }
+
         public Dictionary<List<byte>, char> CodeToChar { get; private set; }
+
         public int TextLength { get; private set; }
-        BinaryCoder bc;
+
         public List<byte> EncodedText { get; private set; }
 
-        public Encoder(string textToEncode)
+        private string fileName;
+
+        public Encoder(string fileName)
         {
-            this.textToEncode = textToEncode;
-            TextLength = textToEncode.Length;
+            this.fileName = fileName;
             CodeToChar = new Dictionary<List<byte>, char>();
             CharToCode = new Dictionary<char, Node>();
         }
 
         public void Encode()
         {
-            Dictionary<char, int> charFreq = textToEncode.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
+            textToEncode = ReadText(fileName);
+            TextLength = textToEncode.Length;
+
+            //Dictionary<char, int> charFreq = textToEncode.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
+            Dictionary<char, int> charFreq = textToEncode.AsParallel().GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
+
             List<LeafNode> leafNodeList = new List<LeafNode>();
- 
-            PriotityQueue<int, Node> queue = new PriotityQueue<int, Node>();
+
+            string priotityQueueType = ConfigurationManager.AppSettings.Get("PriorityQueueType");
+            IPriorityQueue<int, Node> queue = PriorityQueueCreator.Create<int, Node>(priotityQueueType);
+
             foreach (var kvp in charFreq)
             {
                 LeafNode leafNode = new LeafNode(kvp.Key, kvp.Value);
@@ -45,7 +62,6 @@ namespace ConsoleApplication1
 
             var rootNode = queue.Dequeue();
 
-            //if (rootNode.GetType() == typeof(LeafNode)) //for input strings of length 1; с typeof перемудрил) 
             if (rootNode is LeafNode)
                 rootNode.BuildCode(new List<byte>(new byte[] { 0 }));
             else rootNode.BuildCode(new List<byte>());
@@ -53,10 +69,11 @@ namespace ConsoleApplication1
             foreach (var leafNode in leafNodeList)
                 CodeToChar.Add(leafNode.Code, leafNode.Sym);
 
-            List<byte> code = new List<byte>();
-            for (int i = 0; i < TextLength; i++)
-                code.AddRange((CharToCode[textToEncode[i]].Code));
-            bc = new BinaryCoder(code);
+            var charToList = CharToCode.ToDictionary(x => x.Key, y => y.Value.Code);
+
+            string binaryCoderType = ConfigurationManager.AppSettings.Get("BinaryCoderType");
+            IBinaryCoder bc = BinaryCoderCreator.Create(charToList, textToEncode, binaryCoderType);
+
             bc.EncodeToBinary();
             EncodedText = bc.EncodedText;
         }
@@ -69,6 +86,14 @@ namespace ConsoleApplication1
                 bw.Write(num);
             bw.Close();
             fs.Close();
+        }
+
+        private string ReadText(string fileName)
+        {
+            StreamReader sr = new StreamReader(fileName, Encoding.GetEncoding(1251));
+            string text = sr.ReadToEnd();
+            sr.Close();
+            return text;
         }
     }
 }

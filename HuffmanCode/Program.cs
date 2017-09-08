@@ -1,8 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using HuffmanCode.Decoders;
+using HuffmanCode.Decoders.Base;
+using System;
+using System.Configuration;
 using System.Text;
 
-namespace ConsoleApplication1
+namespace HuffmanCode
 {
     class Program
     {
@@ -10,24 +12,37 @@ namespace ConsoleApplication1
         {
             Console.WriteLine("Введите адрес файла для кодировки");
             string fileName = Console.ReadLine();
-            StreamReader sr = new StreamReader(fileName, Encoding.GetEncoding(1251));
-            string textToEncode = sr.ReadToEnd();
-            sr.Close();
 
-            Encoder encoder = new Encoder(textToEncode);
+            DateTime startEncode = DateTime.Now;
+
+            Encoder encoder = new Encoder(fileName);
             encoder.Encode();
 
-            Console.WriteLine(encoder.CharToCode.Count + " " + textToEncode.Length);
-            foreach (var kvp in encoder.CharToCode)
-                Console.WriteLine(kvp.Key + ": " + kvp.Value.CodeToString());
+            TimeSpan tsEncode = DateTime.Now - startEncode;
 
+            DisplayCodeInformation(encoder);
+            
             encoder.WriteToFile("myFile.bin");
 
-            Decoder decoder = new Decoder(encoder.CodeToChar, "myFile.bin", encoder.TextLength);
+            DateTime startDecode = DateTime.Now;
+
+            string decoderType = ConfigurationManager.AppSettings.Get("DecoderType");
+            IDecoder decoder = DecoderCreator.Create(encoder.CodeToChar, "myFile.bin", encoder.TextLength, decoderType);
+
             decoder.Decode();
+            TimeSpan tsDecode = DateTime.Now - startDecode;
+            Console.WriteLine("Время выполнения кодировки/декодировки: " + tsEncode.ToString(@"ss\.ffff") + "/" + tsDecode.ToString(@"ss\.ffff"));
+
             decoder.SaveToText("text.txt", Encoding.GetEncoding(1251));
-            
+
             Console.ReadLine();
+        }
+
+        static void DisplayCodeInformation(Encoder encoder)
+        {
+            Console.WriteLine(encoder.CharToCode.Count);
+            foreach (var kvp in encoder.CharToCode)
+                Console.WriteLine(kvp.Key + ": " + kvp.Value.CodeToString());
         }
     }
 }

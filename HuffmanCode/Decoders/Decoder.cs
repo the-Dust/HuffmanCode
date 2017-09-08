@@ -1,17 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using HuffmanCode.Decoders.Base;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace ConsoleApplication1
+namespace HuffmanCode
 {
-    class Decoder
+    class Decoder : IDecoder
     {
-        Dictionary<string, char> codeToChar;
-        string fileToDecode;
-        LinkedList<byte> code;
-        StringBuilder outStr;
-        int textLength;
+        private Dictionary<string, char> codeToChar;
+
+        private string fileToDecode;
+
+        private LinkedList<byte> code;
+
+        private StringBuilder outStr;
+
+        private int textLength;
+
         public string DecodedText { get; private set; }
 
         public Decoder(Dictionary<List<byte>, char> map, string fileToDecode, int textLength)

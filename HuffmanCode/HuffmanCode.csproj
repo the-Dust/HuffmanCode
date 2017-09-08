@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -8,10 +8,11 @@
     <ProjectGuid>{0F6869D0-8131-46F9-BB1D-4C49FD52E869}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConsoleApplication1</RootNamespace>
+    <RootNamespace>HuffmanCode</RootNamespace>
     <AssemblyName>HuffmanCode</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -23,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -32,9 +34,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,14 +47,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Decoder.cs" />
+    <Compile Include="BinaryCoders\AsyncAdvancedBinaryCoder.cs" />
+    <Compile Include="BinaryCoders\AsyncBinaryCoder.cs" />
+    <Compile Include="BinaryCoders\Base\IBinaryCoder.cs" />
+    <Compile Include="BinaryCoders\BinaryCoderCreator.cs" />
+    <Compile Include="Decoders\AsyncAdvancedDecoder.cs" />
+    <Compile Include="Decoders\AsyncDecoder.cs" />
+    <Compile Include="Decoders\Base\IDecoder.cs" />
+    <Compile Include="Decoders\Decoder.cs" />
     <Compile Include="Encoder.cs" />
+    <Compile Include="Decoders\DecoderCreator.cs" />
     <Compile Include="Node.cs" />
-    <Compile Include="PriorityQueue.cs" />
+    <Compile Include="PriorityQueues\PriorityQueue.cs" />
+    <Compile Include="PriorityQueues\Base\IPriorityQueue.cs" />
+    <Compile Include="PriorityQueues\PriorityQueueCreator.cs" />
+    <Compile Include="PriorityQueues\PriorityQueueII.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BinaryCoder.cs" />
+    <Compile Include="BinaryCoders\BinaryCoder.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
