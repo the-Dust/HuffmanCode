@@ -1,9 +1,9 @@
-﻿using HuffmanCode.BinaryCoders;
-using HuffmanCode.BinaryCoders.Base;
-using HuffmanCode.PriorityQueues;
+﻿using HuffmanCode.BinaryCoders.Base;
+using HuffmanCode.Infrastructure;
 using HuffmanCode.PriorityQueues.Base;
+using Ninject;
+using Ninject.Parameters;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -41,8 +41,8 @@ namespace HuffmanCode
 
             List<LeafNode> leafNodeList = new List<LeafNode>();
 
-            string priotityQueueType = ConfigurationManager.AppSettings.Get("PriorityQueueType");
-            IPriorityQueue<int, Node> queue = PriorityQueueCreator.Create<int, Node>(priotityQueueType);
+            IKernel kernel = new NinjectFactory().Kernel;
+            IPriorityQueue<int, Node> queue = kernel.Get<IPriorityQueue<int, Node>>();
 
             foreach (var kvp in charFreq)
             {
@@ -70,9 +70,9 @@ namespace HuffmanCode
                 CodeToChar.Add(leafNode.Code, leafNode.Sym);
 
             var charToList = CharToCode.ToDictionary(x => x.Key, y => y.Value.Code);
-
-            string binaryCoderType = ConfigurationManager.AppSettings.Get("BinaryCoderType");
-            IBinaryCoder bc = BinaryCoderCreator.Create(charToList, textToEncode, binaryCoderType);
+            var firstArg = new ConstructorArgument("charToCode", charToList);
+            var secondArg = new ConstructorArgument("text", textToEncode);
+            IBinaryCoder bc = kernel.Get<IBinaryCoder>(firstArg, secondArg);
 
             bc.EncodeToBinary();
             EncodedText = bc.EncodedText;

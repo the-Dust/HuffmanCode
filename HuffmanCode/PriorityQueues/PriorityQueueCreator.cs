@@ -10,9 +10,9 @@ namespace HuffmanCode.PriorityQueues
         {
             switch (priorityQueueType)
             {
-                case "firstVersion": return new PriotityQueue<TPriority, TItem>();
-                case "secondVersion": return new PriotityQueueII<TPriority, TItem>();
-                default: return new PriotityQueue<TPriority, TItem>();
+                case "firstVersion": return new PriorityQueue<TPriority, TItem>();
+                case "secondVersion": return new PriorityQueueII<TPriority, TItem>();
+                default: return new PriorityQueue<TPriority, TItem>();
             }
         }
     }

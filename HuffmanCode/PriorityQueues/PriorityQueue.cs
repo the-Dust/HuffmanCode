@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace HuffmanCode.PriorityQueues
 {
-    class PriotityQueue<TPriority, TItem> : IPriorityQueue<TPriority, TItem> where TPriority : IComparable where TItem : class
+    class PriorityQueue<TPriority, TItem> : IPriorityQueue<TPriority, TItem> where TPriority : IComparable where TItem : class
     {
         private SortedDictionary<TPriority, Queue<TItem>> subQueue;
 
-        public PriotityQueue()
+        public PriorityQueue()
         {
             this.subQueue = new SortedDictionary<TPriority, Queue<TItem>>();
         }

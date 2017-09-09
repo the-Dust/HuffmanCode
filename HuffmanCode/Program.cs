@@ -1,7 +1,8 @@
-﻿using HuffmanCode.Decoders;
-using HuffmanCode.Decoders.Base;
+﻿using HuffmanCode.Decoders.Base;
+using HuffmanCode.Infrastructure;
+using Ninject;
+using Ninject.Parameters;
 using System;
-using System.Configuration;
 using System.Text;
 
 namespace HuffmanCode
@@ -26,8 +27,7 @@ namespace HuffmanCode
 
             DateTime startDecode = DateTime.Now;
 
-            string decoderType = ConfigurationManager.AppSettings.Get("DecoderType");
-            IDecoder decoder = DecoderCreator.Create(encoder.CodeToChar, "myFile.bin", encoder.TextLength, decoderType);
+            IDecoder decoder = DecoderInitialize(encoder);
 
             decoder.Decode();
             TimeSpan tsDecode = DateTime.Now - startDecode;
@@ -43,6 +43,15 @@ namespace HuffmanCode
             Console.WriteLine(encoder.CharToCode.Count);
             foreach (var kvp in encoder.CharToCode)
                 Console.WriteLine(kvp.Key + ": " + kvp.Value.CodeToString());
+        }
+
+        static IDecoder DecoderInitialize(Encoder encoder)
+        {
+            var firstArg = new ConstructorArgument("map", encoder.CodeToChar);
+            var secondArg = new ConstructorArgument("fileToDecode", "myFile.bin");
+            var thirdArg = new ConstructorArgument("textLength", encoder.TextLength);
+            IKernel kernel = new NinjectFactory().Kernel;
+            return kernel.Get<IDecoder>(firstArg, secondArg, thirdArg);
         }
     }
 }

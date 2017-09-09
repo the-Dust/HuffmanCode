@@ -37,6 +37,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -57,6 +60,7 @@
     <Compile Include="Decoders\Decoder.cs" />
     <Compile Include="Encoder.cs" />
     <Compile Include="Decoders\DecoderCreator.cs" />
+    <Compile Include="Infrastructure\NinjectFactory.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="PriorityQueues\PriorityQueue.cs" />
     <Compile Include="PriorityQueues\Base\IPriorityQueue.cs" />
@@ -70,6 +74,7 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

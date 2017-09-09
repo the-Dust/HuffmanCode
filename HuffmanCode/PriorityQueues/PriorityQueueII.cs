@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace HuffmanCode.PriorityQueues
 {
-    class PriotityQueueII<TPriority, TItem> : IPriorityQueue<TPriority, TItem> where TPriority : IComparable where TItem : class
+    class PriorityQueueII<TPriority, TItem> : IPriorityQueue<TPriority, TItem> where TPriority : IComparable where TItem : class
     {
         private List<KeyValuePair<TPriority, TItem>> list;
 
@@ -13,7 +13,7 @@ namespace HuffmanCode.PriorityQueues
             return list.Count;
         }
 
-        public PriotityQueueII()
+        public PriorityQueueII()
         {
             list = new List<KeyValuePair<TPriority, TItem>>();
         }
